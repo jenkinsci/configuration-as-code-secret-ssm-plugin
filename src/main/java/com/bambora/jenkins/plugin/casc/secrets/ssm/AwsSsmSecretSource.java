@@ -19,16 +19,13 @@ import java.util.logging.Logger;
 public class AwsSsmSecretSource extends SecretSource {
 
     public static final String CASC_SSM_PREFIX = "CASC_SSM_PREFIX";
+    public static final String SECRETS_MANAGER_PREFIX = "/aws/reference/secretsmanager/";
 
     private static final Logger LOG = Logger.getLogger(AwsSsmSecretSource.class.getName());
 
     @Override
     public Optional<String> reveal(String key) {
-        String resolveKey = key;
-        String prefix =  getSystemProperty();
-        if (prefix != null) {
-            resolveKey = prefix + key;
-        }
+        String resolveKey = getResolveKey(key);
         try {
             GetParameterRequest request = new GetParameterRequest();
             request.withName(resolveKey).withWithDecryption(true);
@@ -56,4 +53,16 @@ public class AwsSsmSecretSource extends SecretSource {
         return System.getenv(CASC_SSM_PREFIX);
     }
 
+    // Visible for testing
+    public String getResolveKey(String key) {
+        String prefix =  getSystemProperty();
+        if (prefix != null) {
+            if (key.startsWith(SECRETS_MANAGER_PREFIX)) {
+                return SECRETS_MANAGER_PREFIX + prefix + key.substring(SECRETS_MANAGER_PREFIX.length());
+            } else {
+                return prefix + key;
+            }
+        }
+        return key;
+    }
 }

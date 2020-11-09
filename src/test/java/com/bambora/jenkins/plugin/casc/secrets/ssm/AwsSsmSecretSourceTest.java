@@ -89,4 +89,26 @@ public class AwsSsmSecretSourceTest {
 
         Assert.assertEquals(Optional.empty(), underTest.reveal("parameter"));
     }
+
+    @Test
+    public void resolveKey() throws Exception{
+        Assert.assertEquals(underTest.getResolveKey("parameter"), "parameter");
+    }
+
+    @Test
+    public void resolveKeyWithCascPrefix() throws Exception{
+        Assert.assertEquals(underTest.getResolveKey(AwsSsmSecretSource.SECRETS_MANAGER_PREFIX + "parameter"), AwsSsmSecretSource.SECRETS_MANAGER_PREFIX + "parameter");
+    }
+
+    @Test
+    public void resolveKeyWithSecretsManagerPrefix() throws Exception{
+        PowerMockito.doReturn("prefix.").when(underTest, "getSystemProperty");
+        Assert.assertEquals(underTest.getResolveKey("parameter"), "prefix.parameter");
+    }
+
+    @Test
+    public void resolveKeyWithCascAndSecretsManagerPrefixes() throws Exception{
+        PowerMockito.doReturn("prefix.").when(underTest, "getSystemProperty");
+        Assert.assertEquals(underTest.getResolveKey(AwsSsmSecretSource.SECRETS_MANAGER_PREFIX + "parameter"), AwsSsmSecretSource.SECRETS_MANAGER_PREFIX + "prefix.parameter");
+    }
 }
