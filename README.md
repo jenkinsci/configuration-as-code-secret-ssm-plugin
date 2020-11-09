@@ -30,8 +30,8 @@ Plugin will try to resolve secrets
       - string:
         id: "cred-id"
         secret: ${filename}
-    
-from SSM with name _filename_. 
+
+from SSM with name _filename_.
 
 If a prefix is needed then configure environment variable _CASC_SSM_PREFIX_.
 Example:
@@ -39,5 +39,13 @@ CASC_SSM_PREFIX=jenkins.master.
 
 It will then resolve the example above with name _jenkins.master.filename_ from SSM.
 
-Code has been contributed by Bambora
+Plugin will also try to resolve secrets
 
+    - credentials:
+      - string:
+        id: "cred-id"
+        secret: /aws/reference/secretsmanager/${filename}
+
+from Secrets Manager with name _filename_ (or _prefix + filename_ provided _CASC_SSM_PREFIX_ is defined). 
+
+Code has been contributed by Bambora
