@@ -46,6 +46,6 @@ Plugin will also try to resolve secrets
         id: "cred-id"
         secret: /aws/reference/secretsmanager/${filename}
 
-from Secrets Manager with name _filename_ (or _prefix + filename_ provided _CAASC_SSM_PREFIX_ is defined). 
+from Secrets Manager with name _filename_ (or _prefix + filename_ provided _CASC_SSM_PREFIX_ is defined). 
 
 Code has been contributed by Bambora
